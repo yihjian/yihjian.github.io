@@ -79,15 +79,24 @@
 
 
 
-<meta name="description" content="CS@UIUC23">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Jian&#39;s Bullshits">
-<meta property="og:url" content="https://yihjian.github.io/index.html">
+<meta name="description" content="Recently I’m working on a Long Short Term Memory (LSTM) model to predict stock price. I collected ticker price data from Yahoo using yfinance and used Tensorflow with Keras to setup the model. It’s on">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Quant-With-LSTM-i">
+<meta property="og:url" content="https://yihjian.github.io/2020/04/15/Quant-With-LSTM-i/index.html">
 <meta property="og:site_name" content="Jian&#39;s Bullshits">
-<meta property="og:description" content="CS@UIUC23">
+<meta property="og:description" content="Recently I’m working on a Long Short Term Memory (LSTM) model to predict stock price. I collected ticker price data from Yahoo using yfinance and used Tensorflow with Keras to setup the model. It’s on">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://yihjian.github.io/images/lstm-i/intc.png">
+<meta property="og:image" content="https://yihjian.github.io/images/lstm-i/bac.png">
+<meta property="og:image" content="https://yihjian.github.io/images/lstm-i/ccl.png">
+<meta property="og:image" content="https://yihjian.github.io/images/lstm-i/lk.png">
+<meta property="og:image" content="https://yihjian.github.io/images/lstm-i/nvda.png">
+<meta property="og:image" content="https://yihjian.github.io/images/lstm-i/aapl.png">
+<meta property="article:published_time" content="2020-04-15T18:35:00.000Z">
+<meta property="article:modified_time" content="2020-04-15T20:10:42.498Z">
 <meta property="article:author" content="Yihong Jian">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yihjian.github.io/images/lstm-i/intc.png">
 
 
 
@@ -117,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="https://yihjian.github.io/"/>
+  <link rel="canonical" href="https://yihjian.github.io/2020/04/15/Quant-With-LSTM-i/"/>
 
 
 
 
 
-  <title>Jian's Bullshits</title>
+  <title>Quant-With-LSTM-i | Jian's Bullshits</title>
   
 
 
@@ -142,8 +151,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -236,9 +244,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -268,9 +276,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/04/15/Quant-With-LSTM-i/" itemprop="url">Quant-With-LSTM-i</a></h1>
+          <h1 class="post-title" itemprop="name headline">Quant-With-LSTM-i</h1>
         
 
         <div class="post-meta">
@@ -342,9 +348,7 @@
       
 
       
-        
-          
-            <p>Recently I’m working on a Long Short Term Memory (LSTM) model to predict stock price. I collected ticker price data from Yahoo using yfinance and used Tensorflow with Keras to setup the model. It’s only at very early stage of this project and I haven’t done any tuning yet, but I came up with some rather intriguing results and some of them doesn’t make sense at all. So code is cheap, show me the talk:</p>
+        <p>Recently I’m working on a Long Short Term Memory (LSTM) model to predict stock price. I collected ticker price data from Yahoo using yfinance and used Tensorflow with Keras to setup the model. It’s only at very early stage of this project and I haven’t done any tuning yet, but I came up with some rather intriguing results and some of them doesn’t make sense at all. So code is cheap, show me the talk:</p>
 <h5 id="Retrieve-Data"><a href="#Retrieve-Data" class="headerlink" title="Retrieve Data:"></a>Retrieve Data:</h5><p>Considering that tech companys and traditional consumer business have some slight difference in terms of technical analysis, I was going to put all avaible historical data of SP500 tickers into my model. But, as a prototype, I only used the data for Microsoft:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">msft = yf.download(tickers = <span class="string">"msft"</span>)</span><br><span class="line">mstf = msft.dropna()</span><br><span class="line">msft = msft.drop(columns=[<span class="string">"Adj Close"</span>, <span class="string">"Volume"</span>])</span><br><span class="line">data = np.array(msft[[<span class="string">"Open"</span>, <span class="string">"High"</span>, <span class="string">"Low"</span>, <span class="string">"Close"</span>]])</span><br></pre></td></tr></table></figure>
 
@@ -389,8 +393,6 @@
 </blockquote>
 <p>As I’ve never systematically learnt recurrent model before, I’m kind of stuck with how to analysis and tackle these issues. If you have any ideas/suggests/discussions, feel free to reach me out.</p>
 
-          
-        
       
     </div>
     
@@ -407,163 +409,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yihjian.github.io/2020/04/14/cu-or-not-cu/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Yihong Jian">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jian's Bullshits">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/04/14/cu-or-not-cu/" itemprop="url">CU or Not CU</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-04-14T17:37:21-05:00">
-                2020-04-14
-              </time>
+              <a href="/2020/04/14/cu-or-not-cu/" rel="next" title="CU or Not CU">
+                <i class="fa fa-chevron-left"></i> CU or Not CU
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Thoughts/" itemprop="url" rel="index">
-                    <span itemprop="name">Thoughts</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>From two weeks ago, I’ve been heavily involved in the preparation of the new Illinois Chinese Student Organization (ICSO). So didn’t do any update on my website last week–which is somewhat slower than my desire updating frequency. <del>Writing something once a week shouldn’t be hard.</del></p>
-<p>One of the most heavily debated questions was whether we should join the NPO Chinese Union (CU). We’ve engaged in conversation with them and discussing the consequences and benefits in meetings. I observed a rather intriguing phenomenon: there is a clear divide between “tech people” and “business people.” On one side, my team, the developers (gosh I’m calling myself a developer) consists of engineering students who lean toward staying independent. On the other side, the administrative team, majorly business students, favored becoming an affiliate member.</p>
-<p>The reason I know not. Perhaps it is just how two groups work. Like what <em>Coders</em> said, geeks have eagle to tackle problems alone–when something doesn’t work, hack it out. And this was precisely how many great software came into being. The business people, however, they need connections and friends to spread their ideas and get money.</p>
-<p>Anyway, it’s just some more nonsense, and for the next passage, I shall be talking about some tech stuff…which was the original intension for this website. Also, I’ll find some time to enable the commenting function.</p>
-<p>Apr 14</p>
-<hr>
-<p>最近两周一直在忙伊利诺伊华人组织（ICSO）的筹备事情，所以一直没有跟新网站。<del>以后还是尽量周更。</del></p>
-<p>最近ICSO一直在讨论的问题就是要不要加入CU，和加入他们带来的后果与好处。在过程中，我发现了一个非常有趣的现象。我团队里的技术人员<del>（不要脸）</del>都一边倒的倾向于保持独立，而管理团队的商学院学生都偏向于加入。我也思考了一下这个现象的原因—也许就是极客和管理人的思维方式吧。就像<em>Coders</em>书里说的那样，程序员都有自己搞定一切的野心，啥东西不灵就自己写个码干他。然而商务人士就不同了，他们需要广泛的人脉和朋友圈来背书。</p>
-<p>啊又是一篇瞎扯文章。接下来还是写技术项的东西吧。。。毕竟那才是网站的本意。。。然后估计升级一下NexT来搞搞评论区。</p>
-<p>4月14日。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -573,344 +440,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yihjian.github.io/2020/04/06/Apr-6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Yihong Jian">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jian's Bullshits">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/04/06/Apr-6/" itemprop="url">Anxiety</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-04-06T17:55:33-05:00">
-                2020-04-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Thoughts/" itemprop="url" rel="index">
-                    <span itemprop="name">Thoughts</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Recently I have found it harder and harder to grasp materials from a book or from a passage. I can’t skim through four, five pages before I pick up my phone or grab tea again. It feels like something is preventing me from doing, well, basically everything. Normally, a cup of pistachios or a couple hours of intense programming would calm me down. but, it’s becoming hard to concentrate through lines of codes. I feel like I should analyze the situation, but I have no clue regarding where this agony came from.</p>
-<p>Maybe it came from the chaotic outside. Since the outbreak of the epidemic, everyone, from my grandma to the stock market, is going crazy; I mean, how often do you see Dow moving down 10 percent one day than up 10 percent the next? It’s just hard to ignore this outburst of information and focus on my inner self, especially when the reality is mixed with rumor and intentional emotional stirrings. Sometimes I have to dig up the entire Google news feed to make sure that I’m not contaminated by fake news. Worst of all is the uncertainty, NOTHING is guaranteed even for tomorrow, except the due date for CS126. None of the summer programs and intern applications replied anything useful, not even my academic advisor who supposed to have the major assignment sent out last week. Well, it’s kind of understandable, who knows if Trump will be blaming China in intensive care tomorrow.</p>
-<p>Maybe it came from my self. Since the shelter-in-place order started, I’ve been talking to a lot of people, and they pulled me into their groups. I rejected none of them, resulting in a sudden increase of errands and unsettled things equal anxiety, period. Not saying that I regret doing this cause their ambitions were tantalizing, and it has been my eager to, well, “make breaking news.” (Though none of my personal projects hasn’t gone any further than a initial git repo) Yet, It’s probably the time to pause for a while and think through. Well, what do I want and how should I get it? It’s a philosophical question that daunts me probably since late Junior year in high school, and, frankly, I have no answer to it. For sure, coding and trading are fun, but, apparently, one finds everything stupid after being trapped in a room for a couple of weeks. </p>
-<p>Enough whining and time to return to reading <em>I Will Bear Witness</em>. Gosh why are we still reading such a depressing book as homework. Thanks for bearing with my terrible English–it’s most likely the first time I ever write something other than academic papers in English. Ironically, or, I shall say pathetically, what flows out of me is English instead of Chinese when I tried to jiggle something. Apparently, despite shitting on WeChat all day and surfing Chinese social media, I’m handicapped in writing fluent Chinese after years of U.S. education. Hopefully, I would find some back in a couple of posts.</p>
-<p>6th Apr, 2020. </p>
-
-          
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yihjian.github.io/2020/04/03/Thoughts-On-Airliner-and-Cruiser-Stock/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Yihong Jian">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jian's Bullshits">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/04/03/Thoughts-On-Airliner-and-Cruiser-Stock/" itemprop="url">Thoughts On Airliner and Cruiser Stock</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-04-03T13:01:02-05:00">
-                2020-04-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Investment/" itemprop="url" rel="index">
-                    <span itemprop="name">Investment</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Update Apr 6th:</p>
-<p>今天邮轮股和消费股，CCL和FL为代表，基本印证了我的分析，我也建仓了CCL，今天浮盈$1左右。航空股今天明显很弱，但是明显减速了，筑底的可能性依然很大，保持观察。有空的话估计会更新一下关于大盘的看法。</p>
-<hr>
-<p>Update Apr 5th:</p>
-<p>周末很都在讨论老巴抛售航空股的问题，我也稍微更新一下吧。</p>
-<p><strong>首先为什么老巴会抛售股票？</strong>主流的声音有两种，一个是说要把股份控制在10%以避开sec汇报的要求，来抄底的时候可以<del>鬼子进村，打枪的不要</del>。 另一个声音是通过分析财务报告，来说明因为基本面产生了变化，导致巴菲特认为航空股不再拥有投资的价值。我不认为我能比网上的价投人分析得更好，就不瞎逼逼了。在雪球/youtube上都有比较详细的分析。</p>
-<p><strong>对我的观点是否有影响？</strong>首先我是k线图操盘手，宏观面上的改变不会给我的判断带来直接影响，但是可能会通过反映在股价上来改变我的建仓逻辑。周五提到的是需要股价拉起+macd小绿柱放大才能确定顶部结构。巴菲特的抛售会拉低股价（周五盘后的抛售），那就意味着这个底背离可能需要更长的时间形成，或者干脆直接砸穿。不管是这两种可能性中的哪一个，接下来的3-5个工作日都是重点关注的时间。总结就是说，k线图会告诉我应不应该建仓。</p>
-<p>p.s. 很多零售股票的走势也很类似，比如FL，M。尤其是梅西百货的底背离已经完整，但是他的财报一直不怎么样，所以持谨慎态度。</p>
-<hr>
-<p>今天盯盘的的时候注意到一些票子都快出现技术面上的底部了，那就把我对他们的想法作为第一篇投资笔记吧。因为一直关注的是CCL，DAL和AAL，所以这篇文章也会用这几只票子做主体。鉴于同类型的股票近期走势都很类似，这三只的图形可以窥见行业其他股票的走势。</p>
-<p>Due to timing issues, I will probably work on an English version later.</p>
-<h4 id="1-回测："><a href="#1-回测：" class="headerlink" title="1. 回测："></a>1. 回测：</h4><p>首先回看一下他们之前的k线图结构。因为我第一次入场是A股，所以把k线图改成了<em>绿跌红涨</em>，这里说明一下。</p>
-<h5 id="首先是CCL："><a href="#首先是CCL：" class="headerlink" title="首先是CCL："></a>首先是CCL：</h5><p>可以很明显的看出在19年12月到20年1月底走了一个非常标准的M双头，并且macd出现了顶部背离。再看长线的周线图，有一个很长的下降趋势线，并且在20年2月最后一次突破失败之后股价就开始跳水。</p>
-<blockquote>
-<p><img src="/images/ccl_top.png" alt> 这是一张12月到1月的日线图，明显的看到双头做平，颈线有对称的跳空。</p>
-</blockquote>
-<blockquote>
-<p><img src="/images/ccl_week.png" alt> 这是CCL的周线图，在多次突破失败后狂泻。</p>
-</blockquote>
-<h5 id="然后看DAL："><a href="#然后看DAL：" class="headerlink" title="然后看DAL："></a>然后看DAL：</h5><p>相似于CCL，也是一个教科书级别的头部反转模式-头肩顶。</p>
-<blockquote>
-<p><img src="/images/dal_head.png" alt> 这只老巴抄在半山腰上的股票在暴跌之前也是有一定迹象的，可以看到明显的左肩和右肩对齐，而且突破颈线是强突破的跳空+长阴线。</p>
-</blockquote>
-<h5 id="最后看AAL："><a href="#最后看AAL：" class="headerlink" title="最后看AAL："></a>最后看AAL：</h5><p>和CCL/DAL不同的是，AAL走出了一个长下降趋势通道的下突破。</p>
-<blockquote>
-<p><img src="/images/aal_channel.png" alt> 这是一张AAL的周线图，可以看出3月的第一周出现了明显的趋势通道向下突破。这是一个很不利的信号。本来下降通道就是股票上期下跌，向下突破说明市场更加没有信心。</p>
-</blockquote>
-<p>小结一下，也就是说刨去疫情对欧美的影响，在1月下旬和2月，这几只股票在一月下旬/二月上旬都已经出现在顶部反转/加速下跌的迹象。个人认为这个技术面的因素于基本面共振加速，也加剧了跌势，也就为这几天潜在的抄底带来了机会。</p>
-<h4 id="2-近期结构："><a href="#2-近期结构：" class="headerlink" title="2. 近期结构："></a>2. 近期结构：</h4><p>近期（尤其是今天）在这些股票出现了，或者很可能出现底部结构。也就是说，个人的判断他们的底部已经靠近了。从二月中旬三月初一直观望等待的抄底机会马上来了。</p>
-<h5 id="依然第一个看CCL："><a href="#依然第一个看CCL：" class="headerlink" title="依然第一个看CCL："></a>依然第一个看CCL：</h5><p>邮轮在tank了这么就之后，昨天+今天已经筑好W形双底的根基，并且有一个底部背离。一旦向上拉起这个底部结构就可以完全确认。而这个结构相对应的是1月的双头，向上拉起的第一个目标是找颈线，也就是约$17的位置。也就是说这是一个潜在的100%的利润。</p>
-<blockquote>
-<p><img src="/images/CCL_buttom.png" alt> 我把背离和底部的位置都标出来了。只要黄色圈中macd小绿柱拉长并且股价拉起，这就是一个底部的买点。</p>
-</blockquote>
-<p>当然值得注意的是最近的$8增发问题。要观察一下这个增发是不是导致股价在8美元上下浮动的原因，应该在4月6日可以确定。</p>
-<h5 id="然后看DAL：-1"><a href="#然后看DAL：-1" class="headerlink" title="然后看DAL："></a>然后看DAL：</h5><p>结构没有很标准，如果按照收盘价看依然是一个双底，但是没有新低所以不是背离。希望他能在砸一下拉低我的进场成本hhh。第一目标依然是35块的颈线。</p>
-<blockquote>
-<p><img src="/images/dal_bot.png" alt> 概念和CCL很相似，依然是需要小绿柱向上增长+股价拉起才进场。</p>
-</blockquote>
-<h5 id="最后看AAL：-1"><a href="#最后看AAL：-1" class="headerlink" title="最后看AAL："></a>最后看AAL：</h5><p>AAL是最难看的，双底没能做平，跌穿了。而且今天是加速下跌的，所以可能是机会最差的。</p>
-<blockquote>
-<p><img src="/images/aal_bot.png" alt>可以看到虽然有背离，但是因为今天（4月3号）拉了一根长阴线，所以需要更长时间减速并且拉起。应该要等一等再进场。</p>
-</blockquote>
-<h4 id="3-基本面"><a href="#3-基本面" class="headerlink" title="3.基本面"></a>3.基本面</h4><p>!TODO</p>
-<p>一般来说技术派不看基本面，但是考虑到大环境这么差，还是留意一下吧。大概念是航空是刚需，邮轮不可能倒闭，所以一定会有机会。挖个坑，看看要不要补财务分析。</p>
-<h4 id="4-操作逻辑"><a href="#4-操作逻辑" class="headerlink" title="4. 操作逻辑"></a>4. 操作逻辑</h4><p>目前的打算是配置10%-15%左右的资产进去邮轮/航空。比例为航空：邮轮=2：1。逻辑是航空业是刚需，恢复一定比作为选择性消费的邮轮快。考虑到大环境不好，股指在技术面上很难看（挖坑2），会偏向于<strong>中短线</strong>，见好就收并且<strong>严格执行止损</strong>。</p>
-<hr>
-<p>注：不构成任何投资意见。仅作为自己的想法/投资笔记。股市有风险，入市需谨慎。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -918,6 +452,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -938,8 +476,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -1016,6 +563,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#Retrieve-Data"><span class="nav-number">1.</span> <span class="nav-text">Retrieve Data:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Clean-Up"><span class="nav-number">2.</span> <span class="nav-text">Clean Up:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Model"><span class="nav-number">3.</span> <span class="nav-text">Model:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Problem"><span class="nav-number">4.</span> <span class="nav-text">Problem:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1143,6 +706,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
