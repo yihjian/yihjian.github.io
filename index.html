@@ -251,6 +251,170 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yihjian.github.io/2020/05/01/Quant-With-LSTM-ii/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yihong Jian">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jian's Bullshits">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/01/Quant-With-LSTM-ii/" itemprop="url">Quant-With-LSTM-ii</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-01T14:19:41-05:00">
+                2020-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Coding/" itemprop="url" rel="index">
+                    <span itemprop="name">Coding</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>It has been another <del>lazy</del> busy two weeks before I had some more time to investigate my stock prediction model, and there’re two major progresses that I think I shall log down.</p>
+<h4 id="Prediction"><a href="#Prediction" class="headerlink" title="Prediction"></a>Prediction</h4><p>Yesterday night, I figured out the way to predict some ticker price for today. My model predicted that <em>BILI, BAC, INTC, GILD, and CCL</em> will be down in terms of closing price today. It seems that I’m correct so far (approx. 2:30 p.m. cdt). Based on the result of an hour ago, the <em>AMD and BAC</em> will be down on Monday, but that might change depending on price movement, and I’ll do a batch of prediction on Sunday night.</p>
+<p>Also, I will try to apply this model to other timeframe as technical analysis works on all timeframes</p>
+<h4 id="“Plateau-Issue”"><a href="#“Plateau-Issue”" class="headerlink" title="“Plateau Issue”"></a>“Plateau Issue”</h4><p>In last post, I mentioned that sometimes the model would just give up and I spent some time investigating this issue. I found that the model automatically bounds the ticker price at around $120. To be more clear, the prediction would “stop” once ticker price hits 120 and resume when it drops below. Here’re some examples</p>
+<blockquote>
+<p><img src="/images/lstm-ii/tsla.png" alt> This is the label (red) vs. prediction (green) for tsla around 2013, clearly the model just stops after hitting 120 price level (y-axis).</p>
+</blockquote>
+<blockquote>
+<p><img src="/images/lstm-ii/msft.png" alt> Similarly Microsoft (around the end of 2018) has the same issue, and it’s training set! So supposingly this problem occurred during training and I could drastically increase accuracy if the problem is solved. Also the plateau is not liked caused by extrapolation since Microsoft was way over 120 for more than a year.</p>
+</blockquote>
+<blockquote>
+<p><img src="/images/lstm-ii/jpm.png" alt> This is the most interesting example–J.P. Morgen of most recent 200 days. the prediction accuracy decreases when price nears 120, stops after 120, and picks up again.</p>
+</blockquote>
+<p>A closer look a prediction result:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">print(y_pred[<span class="number">-125</span>:<span class="number">-110</span>,:])</span><br><span class="line">[[<span class="number">118.594986</span> <span class="number">120.296196</span> <span class="number">118.37011</span>  <span class="number">119.362076</span>]</span><br><span class="line"> [<span class="number">118.92082</span>  <span class="number">120.646355</span> <span class="number">118.720116</span> <span class="number">119.714264</span>]</span><br><span class="line"> [<span class="number">119.21562</span>  <span class="number">120.96588</span>  <span class="number">119.03798</span>  <span class="number">120.034744</span>]</span><br><span class="line"> [<span class="number">119.438065</span> <span class="number">121.209656</span> <span class="number">119.27927</span>  <span class="number">120.27842</span> ]</span><br><span class="line"> [<span class="number">119.61156</span>  <span class="number">121.401344</span> <span class="number">119.468</span>    <span class="number">120.46955</span> ]</span><br><span class="line"> [<span class="number">119.74968</span>  <span class="number">121.55503</span>  <span class="number">119.618164</span> <span class="number">120.62227</span> ]</span><br><span class="line"> [<span class="number">119.86223</span>  <span class="number">121.680786</span> <span class="number">119.73938</span>  <span class="number">120.74647</span> ]</span><br><span class="line"> [<span class="number">119.9632</span>   <span class="number">121.79347</span>  <span class="number">119.84477</span>  <span class="number">120.8563</span>  ]</span><br><span class="line"> [<span class="number">120.07791</span>  <span class="number">121.92008</span>  <span class="number">119.95497</span>  <span class="number">120.975914</span>]</span><br><span class="line"> [<span class="number">120.2704</span>   <span class="number">122.12872</span>  <span class="number">120.11988</span>  <span class="number">121.16532</span> ]</span><br><span class="line"> [<span class="number">120.59798</span>  <span class="number">122.48024</span>  <span class="number">120.384384</span> <span class="number">121.47831</span> ]</span><br><span class="line"> [<span class="number">120.90217</span>  <span class="number">122.803635</span> <span class="number">120.627945</span> <span class="number">121.766914</span>]</span><br><span class="line"> [<span class="number">121.13604</span>  <span class="number">123.03682</span>  <span class="number">120.82533</span>  <span class="number">121.98914</span> ]</span><br><span class="line"> [<span class="number">121.4418</span>   <span class="number">123.30764</span>  <span class="number">121.10597</span>  <span class="number">122.28069</span> ]</span><br><span class="line"> [<span class="number">121.679</span>    <span class="number">123.51221</span>  <span class="number">121.327576</span> <span class="number">122.50713</span> ]</span><br><span class="line"> [<span class="number">121.77057</span>  <span class="number">123.59196</span>  <span class="number">121.413956</span> <span class="number">122.5952</span>  ]</span><br><span class="line"> [<span class="number">121.81259</span>  <span class="number">123.62908</span>  <span class="number">121.45422</span>  <span class="number">122.63607</span> ]</span><br><span class="line"> [<span class="number">121.839066</span> <span class="number">123.65261</span>  <span class="number">121.47986</span>  <span class="number">122.662</span>   ]</span><br><span class="line"> [<span class="number">121.85849</span>  <span class="number">123.669914</span> <span class="number">121.49878</span>  <span class="number">122.6811</span>  ]</span><br><span class="line"> [<span class="number">121.87355</span>  <span class="number">123.683334</span> <span class="number">121.51347</span>  <span class="number">122.695915</span>]</span><br><span class="line"> [<span class="number">121.885666</span> <span class="number">123.69415</span>  <span class="number">121.52532</span>  <span class="number">122.70786</span> ]</span><br><span class="line"> [<span class="number">121.89534</span>  <span class="number">123.70276</span>  <span class="number">121.53476</span>  <span class="number">122.717384</span>]</span><br><span class="line"> [<span class="number">121.903244</span> <span class="number">123.70979</span>  <span class="number">121.54251</span>  <span class="number">122.72517</span> ]</span><br><span class="line"> [<span class="number">121.909775</span> <span class="number">123.71563</span>  <span class="number">121.548935</span> <span class="number">122.73163</span> ]</span><br><span class="line"> [<span class="number">121.91516</span>  <span class="number">123.720474</span> <span class="number">121.55426</span>  <span class="number">122.736984</span>]]</span><br><span class="line"></span><br><span class="line">print(y_pred[<span class="number">-50</span>:<span class="number">-30</span>,:])</span><br><span class="line">[[<span class="number">121.97397</span>  <span class="number">123.77238</span>  <span class="number">121.6122</span>   <span class="number">122.79505</span> ]</span><br><span class="line"> [<span class="number">121.974106</span> <span class="number">123.77251</span>  <span class="number">121.61233</span>  <span class="number">122.795204</span>]</span><br><span class="line"> [<span class="number">121.97473</span>  <span class="number">123.77303</span>  <span class="number">121.6129</span>   <span class="number">122.79578</span> ]</span><br><span class="line"> [<span class="number">121.97554</span>  <span class="number">123.7737</span>   <span class="number">121.61364</span>  <span class="number">122.79653</span> ]</span><br><span class="line"> [<span class="number">121.9775</span>   <span class="number">123.775345</span> <span class="number">121.61543</span>  <span class="number">122.79836</span> ]</span><br><span class="line"> [<span class="number">121.98193</span>  <span class="number">123.77913</span>  <span class="number">121.61937</span>  <span class="number">122.80246</span> ]</span><br><span class="line"> [<span class="number">121.98416</span>  <span class="number">123.78073</span>  <span class="number">121.62105</span>  <span class="number">122.80426</span> ]</span><br><span class="line"> [<span class="number">121.98341</span>  <span class="number">123.779526</span> <span class="number">121.61937</span>  <span class="number">122.80286</span> ]</span><br><span class="line"> [<span class="number">121.97371</span>  <span class="number">123.76968</span>  <span class="number">121.60829</span>  <span class="number">122.79213</span> ]</span><br><span class="line"> [<span class="number">121.87557</span>  <span class="number">123.675064</span> <span class="number">121.50528</span>  <span class="number">122.68991</span> ]</span><br><span class="line"> [<span class="number">114.85866</span>  <span class="number">116.58525</span>  <span class="number">114.249084</span> <span class="number">115.37254</span> ]</span><br><span class="line"> [<span class="number">102.18071</span>  <span class="number">103.6875</span>   <span class="number">100.93708</span>  <span class="number">102.316696</span>]</span><br><span class="line"> [<span class="number">103.84379</span>  <span class="number">105.045616</span> <span class="number">102.54588</span>  <span class="number">103.7781</span>  ]</span><br><span class="line"> [ <span class="number">99.68439</span>  <span class="number">100.732445</span>  <span class="number">98.26677</span>   <span class="number">99.39317</span> ]</span><br><span class="line"> [ <span class="number">95.785934</span>  <span class="number">96.767426</span>  <span class="number">94.37234</span>   <span class="number">95.400276</span>]</span><br><span class="line"> [<span class="number">104.81848</span>  <span class="number">105.789536</span> <span class="number">103.509056</span> <span class="number">104.634575</span>]</span><br><span class="line"> [ <span class="number">93.265015</span>  <span class="number">94.249084</span>  <span class="number">91.780655</span>  <span class="number">92.95141</span> ]</span><br><span class="line"> [ <span class="number">97.01548</span>   <span class="number">97.91057</span>   <span class="number">95.53687</span>   <span class="number">96.73838</span> ]</span><br><span class="line"> [ <span class="number">89.63896</span>   <span class="number">90.62987</span>   <span class="number">88.16635</span>   <span class="number">89.38889</span> ]</span><br><span class="line"> [ <span class="number">86.91128</span>   <span class="number">87.87613</span>   <span class="number">85.50348</span>   <span class="number">86.60942</span> ]]</span><br></pre></td></tr></table></figure>
+
+<p>Although I think it’s possible to get around by factoring the entire <code>x_pred</code> by 1/10, but I do not think that’s the optimal solution since 1.predicting on training set also produces dubious results and 2.factoring does not represent actual market as different price level usually have different volatility. I speculate there’re a couple of possible errors: </p>
+<ol>
+<li>Overflow of Numpy/Tensorflow: not really likely under float64</li>
+<li>Caused by plateau of MSFT during 2019: Why would the model catch this but not the afterward breakthrough.</li>
+<li>TF source code error: I tried to look into it but it’s way too hard for me to navigate around at this moment. </li>
+</ol>
+<p>I’ll retrain the model on other tickers like AMZN or TSLA that are way over 120 dollars and see if they make any difference. But I don’t really like this idea as these tickers are not not typical representation of the entire market. If anyone has any, just please, reach out to me.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://yihjian.github.io/2020/04/15/Quant-With-LSTM-i/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -958,7 +1122,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

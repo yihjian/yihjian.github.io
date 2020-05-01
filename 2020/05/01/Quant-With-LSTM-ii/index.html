@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="It has been another lazy busy two weeks before I had some more time to investigate my stock prediction model, and there’re two major progresses that I think I shall log down. PredictionYesterday night">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Quant-With-LSTM-ii">
+<meta property="og:url" content="https://yihjian.github.io/2020/05/01/Quant-With-LSTM-ii/index.html">
+<meta property="og:site_name" content="Jian&#39;s Bullshits">
+<meta property="og:description" content="It has been another lazy busy two weeks before I had some more time to investigate my stock prediction model, and there’re two major progresses that I think I shall log down. PredictionYesterday night">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://yihjian.github.io/images/lstm-ii/tsla.png">
+<meta property="og:image" content="https://yihjian.github.io/images/lstm-ii/msft.png">
+<meta property="og:image" content="https://yihjian.github.io/images/lstm-ii/jpm.png">
+<meta property="article:published_time" content="2020-05-01T19:19:41.000Z">
+<meta property="article:modified_time" content="2020-05-01T20:31:17.570Z">
+<meta property="article:author" content="Yihong Jian">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yihjian.github.io/images/lstm-ii/tsla.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yihjian.github.io/2020/05/01/Quant-With-LSTM-ii/"/>
+
+
+
+
+
+  <title>Quant-With-LSTM-ii | Jian's Bullshits</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jian's Bullshits</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-coding">
+          <a href="/categories/Coding/" rel="section">
+            
+            Coding
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-investment">
+          <a href="/categories/Investment/" rel="section">
+            
+            Investment
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-thoughts">
+          <a href="/categories/Thoughts/" rel="section">
+            
+            Thoughts
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yihjian.github.io/2020/05/01/Quant-With-LSTM-ii/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yihong Jian">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jian's Bullshits">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Quant-With-LSTM-ii</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-01T14:19:41-05:00">
+                2020-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Coding/" itemprop="url" rel="index">
+                    <span itemprop="name">Coding</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>It has been another <del>lazy</del> busy two weeks before I had some more time to investigate my stock prediction model, and there’re two major progresses that I think I shall log down.</p>
+<h4 id="Prediction"><a href="#Prediction" class="headerlink" title="Prediction"></a>Prediction</h4><p>Yesterday night, I figured out the way to predict some ticker price for today. My model predicted that <em>BILI, BAC, INTC, GILD, and CCL</em> will be down in terms of closing price today. It seems that I’m correct so far (approx. 2:30 p.m. cdt). Based on the result of an hour ago, the <em>AMD and BAC</em> will be down on Monday, but that might change depending on price movement, and I’ll do a batch of prediction on Sunday night.</p>
+<p>Also, I will try to apply this model to other timeframe as technical analysis works on all timeframes</p>
+<h4 id="“Plateau-Issue”"><a href="#“Plateau-Issue”" class="headerlink" title="“Plateau Issue”"></a>“Plateau Issue”</h4><p>In last post, I mentioned that sometimes the model would just give up and I spent some time investigating this issue. I found that the model automatically bounds the ticker price at around $120. To be more clear, the prediction would “stop” once ticker price hits 120 and resume when it drops below. Here’re some examples</p>
+<blockquote>
+<p><img src="/images/lstm-ii/tsla.png" alt> This is the label (red) vs. prediction (green) for tsla around 2013, clearly the model just stops after hitting 120 price level (y-axis).</p>
+</blockquote>
+<blockquote>
+<p><img src="/images/lstm-ii/msft.png" alt> Similarly Microsoft (around the end of 2018) has the same issue, and it’s training set! So supposingly this problem occurred during training and I could drastically increase accuracy if the problem is solved. Also the plateau is not liked caused by extrapolation since Microsoft was way over 120 for more than a year.</p>
+</blockquote>
+<blockquote>
+<p><img src="/images/lstm-ii/jpm.png" alt> This is the most interesting example–J.P. Morgen of most recent 200 days. the prediction accuracy decreases when price nears 120, stops after 120, and picks up again.</p>
+</blockquote>
+<p>A closer look a prediction result:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">print(y_pred[<span class="number">-125</span>:<span class="number">-110</span>,:])</span><br><span class="line">[[<span class="number">118.594986</span> <span class="number">120.296196</span> <span class="number">118.37011</span>  <span class="number">119.362076</span>]</span><br><span class="line"> [<span class="number">118.92082</span>  <span class="number">120.646355</span> <span class="number">118.720116</span> <span class="number">119.714264</span>]</span><br><span class="line"> [<span class="number">119.21562</span>  <span class="number">120.96588</span>  <span class="number">119.03798</span>  <span class="number">120.034744</span>]</span><br><span class="line"> [<span class="number">119.438065</span> <span class="number">121.209656</span> <span class="number">119.27927</span>  <span class="number">120.27842</span> ]</span><br><span class="line"> [<span class="number">119.61156</span>  <span class="number">121.401344</span> <span class="number">119.468</span>    <span class="number">120.46955</span> ]</span><br><span class="line"> [<span class="number">119.74968</span>  <span class="number">121.55503</span>  <span class="number">119.618164</span> <span class="number">120.62227</span> ]</span><br><span class="line"> [<span class="number">119.86223</span>  <span class="number">121.680786</span> <span class="number">119.73938</span>  <span class="number">120.74647</span> ]</span><br><span class="line"> [<span class="number">119.9632</span>   <span class="number">121.79347</span>  <span class="number">119.84477</span>  <span class="number">120.8563</span>  ]</span><br><span class="line"> [<span class="number">120.07791</span>  <span class="number">121.92008</span>  <span class="number">119.95497</span>  <span class="number">120.975914</span>]</span><br><span class="line"> [<span class="number">120.2704</span>   <span class="number">122.12872</span>  <span class="number">120.11988</span>  <span class="number">121.16532</span> ]</span><br><span class="line"> [<span class="number">120.59798</span>  <span class="number">122.48024</span>  <span class="number">120.384384</span> <span class="number">121.47831</span> ]</span><br><span class="line"> [<span class="number">120.90217</span>  <span class="number">122.803635</span> <span class="number">120.627945</span> <span class="number">121.766914</span>]</span><br><span class="line"> [<span class="number">121.13604</span>  <span class="number">123.03682</span>  <span class="number">120.82533</span>  <span class="number">121.98914</span> ]</span><br><span class="line"> [<span class="number">121.4418</span>   <span class="number">123.30764</span>  <span class="number">121.10597</span>  <span class="number">122.28069</span> ]</span><br><span class="line"> [<span class="number">121.679</span>    <span class="number">123.51221</span>  <span class="number">121.327576</span> <span class="number">122.50713</span> ]</span><br><span class="line"> [<span class="number">121.77057</span>  <span class="number">123.59196</span>  <span class="number">121.413956</span> <span class="number">122.5952</span>  ]</span><br><span class="line"> [<span class="number">121.81259</span>  <span class="number">123.62908</span>  <span class="number">121.45422</span>  <span class="number">122.63607</span> ]</span><br><span class="line"> [<span class="number">121.839066</span> <span class="number">123.65261</span>  <span class="number">121.47986</span>  <span class="number">122.662</span>   ]</span><br><span class="line"> [<span class="number">121.85849</span>  <span class="number">123.669914</span> <span class="number">121.49878</span>  <span class="number">122.6811</span>  ]</span><br><span class="line"> [<span class="number">121.87355</span>  <span class="number">123.683334</span> <span class="number">121.51347</span>  <span class="number">122.695915</span>]</span><br><span class="line"> [<span class="number">121.885666</span> <span class="number">123.69415</span>  <span class="number">121.52532</span>  <span class="number">122.70786</span> ]</span><br><span class="line"> [<span class="number">121.89534</span>  <span class="number">123.70276</span>  <span class="number">121.53476</span>  <span class="number">122.717384</span>]</span><br><span class="line"> [<span class="number">121.903244</span> <span class="number">123.70979</span>  <span class="number">121.54251</span>  <span class="number">122.72517</span> ]</span><br><span class="line"> [<span class="number">121.909775</span> <span class="number">123.71563</span>  <span class="number">121.548935</span> <span class="number">122.73163</span> ]</span><br><span class="line"> [<span class="number">121.91516</span>  <span class="number">123.720474</span> <span class="number">121.55426</span>  <span class="number">122.736984</span>]]</span><br><span class="line"></span><br><span class="line">print(y_pred[<span class="number">-50</span>:<span class="number">-30</span>,:])</span><br><span class="line">[[<span class="number">121.97397</span>  <span class="number">123.77238</span>  <span class="number">121.6122</span>   <span class="number">122.79505</span> ]</span><br><span class="line"> [<span class="number">121.974106</span> <span class="number">123.77251</span>  <span class="number">121.61233</span>  <span class="number">122.795204</span>]</span><br><span class="line"> [<span class="number">121.97473</span>  <span class="number">123.77303</span>  <span class="number">121.6129</span>   <span class="number">122.79578</span> ]</span><br><span class="line"> [<span class="number">121.97554</span>  <span class="number">123.7737</span>   <span class="number">121.61364</span>  <span class="number">122.79653</span> ]</span><br><span class="line"> [<span class="number">121.9775</span>   <span class="number">123.775345</span> <span class="number">121.61543</span>  <span class="number">122.79836</span> ]</span><br><span class="line"> [<span class="number">121.98193</span>  <span class="number">123.77913</span>  <span class="number">121.61937</span>  <span class="number">122.80246</span> ]</span><br><span class="line"> [<span class="number">121.98416</span>  <span class="number">123.78073</span>  <span class="number">121.62105</span>  <span class="number">122.80426</span> ]</span><br><span class="line"> [<span class="number">121.98341</span>  <span class="number">123.779526</span> <span class="number">121.61937</span>  <span class="number">122.80286</span> ]</span><br><span class="line"> [<span class="number">121.97371</span>  <span class="number">123.76968</span>  <span class="number">121.60829</span>  <span class="number">122.79213</span> ]</span><br><span class="line"> [<span class="number">121.87557</span>  <span class="number">123.675064</span> <span class="number">121.50528</span>  <span class="number">122.68991</span> ]</span><br><span class="line"> [<span class="number">114.85866</span>  <span class="number">116.58525</span>  <span class="number">114.249084</span> <span class="number">115.37254</span> ]</span><br><span class="line"> [<span class="number">102.18071</span>  <span class="number">103.6875</span>   <span class="number">100.93708</span>  <span class="number">102.316696</span>]</span><br><span class="line"> [<span class="number">103.84379</span>  <span class="number">105.045616</span> <span class="number">102.54588</span>  <span class="number">103.7781</span>  ]</span><br><span class="line"> [ <span class="number">99.68439</span>  <span class="number">100.732445</span>  <span class="number">98.26677</span>   <span class="number">99.39317</span> ]</span><br><span class="line"> [ <span class="number">95.785934</span>  <span class="number">96.767426</span>  <span class="number">94.37234</span>   <span class="number">95.400276</span>]</span><br><span class="line"> [<span class="number">104.81848</span>  <span class="number">105.789536</span> <span class="number">103.509056</span> <span class="number">104.634575</span>]</span><br><span class="line"> [ <span class="number">93.265015</span>  <span class="number">94.249084</span>  <span class="number">91.780655</span>  <span class="number">92.95141</span> ]</span><br><span class="line"> [ <span class="number">97.01548</span>   <span class="number">97.91057</span>   <span class="number">95.53687</span>   <span class="number">96.73838</span> ]</span><br><span class="line"> [ <span class="number">89.63896</span>   <span class="number">90.62987</span>   <span class="number">88.16635</span>   <span class="number">89.38889</span> ]</span><br><span class="line"> [ <span class="number">86.91128</span>   <span class="number">87.87613</span>   <span class="number">85.50348</span>   <span class="number">86.60942</span> ]]</span><br></pre></td></tr></table></figure>
+
+<p>Although I think it’s possible to get around by factoring the entire <code>x_pred</code> by 1/10, but I do not think that’s the optimal solution since 1.predicting on training set also produces dubious results and 2.factoring does not represent actual market as different price level usually have different volatility. I speculate there’re a couple of possible errors: </p>
+<ol>
+<li>Overflow of Numpy/Tensorflow: not really likely under float64</li>
+<li>Caused by plateau of MSFT during 2019: Why would the model catch this but not the afterward breakthrough.</li>
+<li>TF source code error: I tried to look into it but it’s way too hard for me to navigate around at this moment. </li>
+</ol>
+<p>I’ll retrain the model on other tickers like AMZN or TSLA that are way over 120 dollars and see if they make any difference. But I don’t really like this idea as these tickers are not not typical representation of the entire market. If anyone has any, just please, reach out to me.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/15/Quant-With-LSTM-i/" rel="next" title="Quant-With-LSTM-i">
+                <i class="fa fa-chevron-left"></i> Quant-With-LSTM-i
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Yihong Jian" />
+            
+              <p class="site-author-name" itemprop="name">Yihong Jian</p>
+              <p class="site-description motion-element" itemprop="description">CS@UIUC23</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yihjian" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:jianyh1@hotmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.linkedin.com/in/yihong-jian-b66461133/" target="_blank" title="Linked-In">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Linked-In</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Prediction"><span class="nav-number">1.</span> <span class="nav-text">Prediction</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#“Plateau-Issue”"><span class="nav-number">2.</span> <span class="nav-text">“Plateau Issue”</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yihong Jian</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
