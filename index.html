@@ -367,6 +367,91 @@
 <li>TF source code error: I tried to look into it but it’s way too hard for me to navigate around at this moment. </li>
 </ol>
 <p>I’ll retrain the model on other tickers like AMZN or TSLA that are way over 120 dollars and see if they make any difference. But I don’t really like this idea as these tickers are not not typical representation of the entire market. If anyone has any, just please, reach out to me.</p>
+<hr>
+<h3 id="Sunday-update"><a href="#Sunday-update" class="headerlink" title="Sunday update:"></a>Sunday update:</h3><p>So here’s my model prediction on Sunday <del>night</del> morning:</p>
+<table>
+<thead>
+<tr>
+<th align="center">Ticker</th>
+<th align="center">Direction</th>
+<th align="center">Close price</th>
+<th align="center">% prediction change*</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Intel</td>
+<td align="center">down</td>
+<td align="center">53.57</td>
+<td align="center">-4.41%</td>
+</tr>
+<tr>
+<td align="center">JP Morgan</td>
+<td align="center">up</td>
+<td align="center">93.69</td>
+<td align="center">-0.01%</td>
+</tr>
+<tr>
+<td align="center">AMD</td>
+<td align="center">down</td>
+<td align="center">44.08</td>
+<td align="center">-7.06%</td>
+</tr>
+<tr>
+<td align="center">Bilibili</td>
+<td align="center">down</td>
+<td align="center">24.37</td>
+<td align="center">-1.48%</td>
+</tr>
+<tr>
+<td align="center">Delta Airline</td>
+<td align="center">down</td>
+<td align="center">23.02</td>
+<td align="center">-2.34%</td>
+</tr>
+<tr>
+<td align="center">Pinduoduo</td>
+<td align="center">down</td>
+<td align="center">39.77</td>
+<td align="center">-7.58%</td>
+</tr>
+<tr>
+<td align="center">Gilead Science</td>
+<td align="center">down</td>
+<td align="center">73.27</td>
+<td align="center">-3.86%</td>
+</tr>
+<tr>
+<td align="center">CVS Health</td>
+<td align="center">down</td>
+<td align="center">55.84</td>
+<td align="center">–3.79%</td>
+</tr>
+<tr>
+<td align="center">Homel Food</td>
+<td align="center">down</td>
+<td align="center">43.02</td>
+<td align="center">-4.42%</td>
+</tr>
+<tr>
+<td align="center">Occidental Petroleum</td>
+<td align="center">down</td>
+<td align="center">14.81</td>
+<td align="center">-1.40%</td>
+</tr>
+</tbody></table>
+<p><em>* Percent change respect to the model prediction of Friday price (since LSTM predicts a chain of results), while direction is with respect of actual price.</em></p>
+<p>So based on these results, I shall say that Monday Market would be pretty pessimistic as these tickers are from different industry. However these tickers might not be good representatives considering big market cap companies like Google, Amazon, Costco etc. have prices way beyond $120, which it limited by a “bug” in my model.</p>
+<h4 id="Tackle-“Plateau-issue”-by-training-with-Amazon"><a href="#Tackle-“Plateau-issue”-by-training-with-Amazon" class="headerlink" title="Tackle “Plateau issue” by training with Amazon"></a>Tackle “Plateau issue” by training with Amazon</h4><p>I trained the model using amazon as my sample. The first noticeable problem is that the model is much harder to train. I got around 19% loss at 30 epoch (training with mstf was around 2.5), 14.5% at 50 epoch and 11% at 70 epoch. Further training was able to reduce loss to 8.42% at 90 epoch, but the 100th epoch rebounds to 10%, which suggests a likely overshoot and overfit. I should’ve record the loss but too late now… The analysis of “amazon model” is the following:</p>
+<blockquote>
+<p><img src="/images/lstm-ii/bac.png" alt> Compare the performance of prediction on bac, observe that the model captures the trend every well across 3 different training stages and it performs exceptionally at 70 epoch. But, at 100 epoch, we see extra volatility (well, price of AMZN is too crazy comparing to bank of America).</p>
+</blockquote>
+<blockquote>
+<p><img src="/images/lstm-ii/msft_amzn.png" alt> Now look at performance of prediction on Microsoft , observe plateau is gone (compare to “msft model”).  At 70 epoch, the “amazon model” captures all day-to-day changes accurately. Though they might be good indicators of the market craziness, but I would not consider any of these prediction as usable due to volatility.</p>
+</blockquote>
+<blockquote>
+<p><img src="/images/lstm-ii/plateau.png" alt> The most interesting part is the plateau issue. The plateau is still there except that the height has changed through out training. At 50 epoch, the model plateaus at around 480, at 70, it plateaus around 620, and at 100 epoch, it plateaus at around 800. Note that prediction of the 70-epoch model captures TSLA price every well under 620 dollars while 100-epoch model is just off the target.</p>
+</blockquote>
+<p>So what I’m trying to say is that the model doesn’t work well if trained with amazon. Even with the best performance at 70 epoch, we’re still seeing unusual volatility, and plateau issue remains resolved.</p>
 
           
         
