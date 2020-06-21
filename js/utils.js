@@ -115,7 +115,7 @@ NexT.utils = {
   registerVideoIframe: function() {
     document.querySelectorAll('iframe').forEach(element => {
       const supported = [
-        'www.youtube.com',
+        //'www.youtube.com',
         'player.vimeo.com',
         'player.youku.com',
         'player.bilibili.com',
